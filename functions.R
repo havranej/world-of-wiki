@@ -74,8 +74,8 @@ get.page.length <- function(lang.code, page.name){
 
 filter.and.add.states <- function(df){
   selection <- as.character(LANG.TO.STATE$lang.code)
-  df <- df[selection,]
-  df <- cbind(df, region = LANG.TO.STATE$region) ### ! troublesome, if the article in the given language doesn't exist
+  df <- df[rownames(df) %in% selection,] # Lengthy selection used in order to avoid partial matching
+  df <- merge(df, LANG.TO.STATE, by = "lang.code")
   return(df)
 }
 
@@ -92,8 +92,9 @@ add.coordinates <- function(df){
 }
 
 MAP.DATA <- map_data("world")
-LANG.TO.STATE <- data.frame(lang.code = c("cs", "de", "de", "pl", "sk", "fr", "nl"), 
+LANG.TO.STATE <- data.frame(lang.code = c("cs", "de", "de", "pl", "sk", "fr", "nl"),
                             region = c("Czech Republic", "Germany", "Austria", "Poland", "Slovakia", "France", "Netherlands"))
+
 
 
 page.name <- "Prague"
