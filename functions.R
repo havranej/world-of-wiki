@@ -72,15 +72,20 @@ get.page.length <- function(lang.code, page.name){
   return(len)
 }
 
+get.checked.page.length <- function(row){
+  if(is.na(row["title"])) return(NA)
+  return(get.page.length(row["lang.code"], row["title"]))
+}
+
 filter.and.add.states <- function(df){
   selection <- as.character(LANG.TO.STATE$lang.code)
   df <- df[rownames(df) %in% selection,] # Lengthy selection used in order to avoid partial matching
-  df <- merge(df, LANG.TO.STATE, by = "lang.code")
+  df <- merge(df, LANG.TO.STATE, by = "lang.code", all.y = TRUE)
   return(df)
 }
 
 add.values <- function(df){
-  values <- apply(df, 1, function(row) get.page.length(row["lang.code"], row["title"]))
+  values <- apply(df, 1, get.checked.page.length)
   result <- cbind(df, value = values)
   return(result)
 }
@@ -97,11 +102,11 @@ LANG.TO.STATE <- data.frame(lang.code = c("cs", "de", "de", "pl", "sk", "fr", "n
 
 
 
-page.name <- "Prague"
+page.name <- "Salt"
 x <- get.language.variations(page.name) %>% filter.and.add.states() %>% add.values() %>% add.coordinates()
 
 ggplot(x, aes(long, lat, group=group, fill=value)) + geom_polygon(color="grey") + #theme.map() +
-  scale_fill_viridis(option = "viridis", direction = -1) + 
+  scale_fill_viridis(option = "viridis", direction = -1, na.value = "grey50") + 
   labs(x = NULL, 
        y = NULL, 
        title = page.name, 
