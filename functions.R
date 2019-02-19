@@ -15,10 +15,10 @@ theme.map <- function(...) {
       axis.title.y = element_blank(),
       panel.grid.major = element_line(color = "#ebebe5", size = 0.2),
       panel.grid.minor = element_blank(),
-      plot.background = element_rect(fill = "#f5f5f2", color = NA), 
-      panel.background = element_rect(fill = "#f5f5f2", color = NA), 
-      legend.background = element_rect(fill = "#f5f5f2", color = NA),
-      panel.border = element_blank(),
+      plot.background = element_rect(fill = "#FFF8E7", color = NA), 
+      panel.background = element_rect(fill = "#FFF8E7", color = NA), 
+      legend.background = element_rect(fill = "#FFF8E7", color = NA),
+      panel.border = element_rect(fill = NA, color = "gray80", size = 0.5),
       ...
     )
 }
@@ -102,11 +102,20 @@ LANG.TO.STATE <- data.frame(lang.code = c("cs", "de", "de", "pl", "sk", "fr", "n
 
 
 
-page.name <- "Salt"
+page.name <- "Zeus"
 x <- get.language.variations(page.name) %>% filter.and.add.states() %>% add.values() %>% add.coordinates()
 
-ggplot(x, aes(long, lat, group=group, fill=value)) + geom_polygon(color="grey") + #theme.map() +
-  scale_fill_viridis(option = "viridis", direction = -1, na.value = "grey50") + 
+ggplot(x, aes(long, lat, group=group, fill=value)) + geom_polygon(color="grey") + 
+  theme.map() +
+  scale_fill_viridis(option = "viridis", 
+                     direction = -1, 
+                     na.value = "grey50",
+                     name = NULL,
+                     guide = guide_colorbar(barheight = unit(80, units = "mm"),
+                                            barwidth = unit(2, units = "mm"),
+                                            title.position = 'left',
+                                            title.hjust = 0.5,
+                                            label.hjust = 0.5)) + 
   labs(x = NULL, 
        y = NULL, 
        title = page.name, 
