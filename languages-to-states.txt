@@ -1,0 +1,16 @@
+cs:Czech Republic
+de:Germany
+de:Austria
+fr:France
+hu:Hungary
+it:Italy
+nl:Netherlands
+pl:Poland
+sk:Slovakia
+en:UK
+es:Spain
+pt:Portugal
+de:Switzerland
+nl:Belgium
+fr:Luxembourg
+da:Denmark

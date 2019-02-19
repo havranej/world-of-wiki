@@ -97,12 +97,9 @@ add.coordinates <- function(df){
 }
 
 MAP.DATA <- map_data("world")
-LANG.TO.STATE <- data.frame(lang.code = c("cs", "de", "de", "pl", "sk", "fr", "nl"),
-                            region = c("Czech Republic", "Germany", "Austria", "Poland", "Slovakia", "France", "Netherlands"))
+LANG.TO.STATE <- read.delim("languages-to-states.txt", header = FALSE, sep = ":", col.names = c("lang.code", "region"))
 
-
-
-page.name <- "Zeus"
+page.name <- "Prague"
 x <- get.language.variations(page.name) %>% filter.and.add.states() %>% add.values() %>% add.coordinates()
 
 ggplot(x, aes(long, lat, group=group, fill=value)) + geom_polygon(color="grey") + 
