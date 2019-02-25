@@ -1,16 +1,16 @@
 cs:Czech Republic
-de:Germany
+da:Denmark
 de:Austria
-fr:France
-hu:Hungary
-it:Italy
-nl:Netherlands
-pl:Poland
-sk:Slovakia
+de:Germany
+de:Switzerland
 en:UK
 es:Spain
-pt:Portugal
-de:Switzerland
-nl:Belgium
+fr:France
 fr:Luxembourg
-da:Denmark
+hu:Hungary
+it:Italy
+nl:Belgium
+nl:Netherlands
+pl:Poland
+pt:Portugal
+sk:Slovakia

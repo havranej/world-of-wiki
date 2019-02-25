@@ -67,8 +67,7 @@ remove.html <- function(text){
 
 get.page.length <- function(lang.code, page.name){
   raw.html <- get.page.content(lang.code, page.name)
-  text <- remove.html(raw.html)
-  len <- nchar(text)
+  len <- nchar(raw.html)
   return(len)
 }
 
@@ -102,7 +101,9 @@ LANG.TO.STATE <- read.delim("languages-to-states.txt", header = FALSE, sep = ":"
 page.name <- "Prague"
 x <- get.language.variations(page.name) %>% filter.and.add.states() %>% add.values() %>% add.coordinates()
 
-ggplot(x, aes(long, lat, group=group, fill=value)) + geom_polygon(color="grey") + 
+
+ggplot(x, aes(long, lat, group=group, fill=value)) + 
+  geom_polygon(color="grey") + 
   theme.map() +
   scale_fill_viridis(option = "viridis", 
                      direction = -1, 
@@ -116,4 +117,8 @@ ggplot(x, aes(long, lat, group=group, fill=value)) + geom_polygon(color="grey") 
   labs(x = NULL, 
        y = NULL, 
        title = page.name, 
-       subtitle = "Wikipedia page size in major language of the state")
+       subtitle = "Wikipedia page size in major language of the state") 
+
+
+
+
