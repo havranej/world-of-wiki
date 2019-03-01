@@ -1,3 +1,6 @@
+be:Belarus
+bg:Bulgaria
+bs:Bosnia and Herzegovina
 cs:Czech Republic
 da:Denmark
 de:Austria
@@ -5,12 +8,24 @@ de:Germany
 de:Switzerland
 en:UK
 es:Spain
+et:Estonia
+fi:Finland
 fr:France
 fr:Luxembourg
+hr:Croatia
 hu:Hungary
 it:Italy
+lt:Lithuania
+lv:Latvia
 nl:Belgium
 nl:Netherlands
+no:Norway
 pl:Poland
 pt:Portugal
+ro:Moldova
+ro:Romania
 sk:Slovakia
+sl:Slovenia
+sr:Serbia
+sv:Sweden
+uk:Ukraine

@@ -104,15 +104,28 @@ add.coordinates <- function(df){
   return(result)
 }
 
+make.labels <- function(data){
+  data.select <- unique(data[c("region", "title", "lang.code")])
+  result <- merge(CENTROIDS, data.select, by = "region")
+  return(result)
+}
+
 MAP.DATA <- map_data("world")
+
 LANG.TO.STATE <- read.delim("languages-to-states.txt", header = FALSE, sep = ":", col.names = c("lang.code", "region"))
+
+CENTROIDS <- aggregate(cbind(long, lat) ~ region, data=MAP.DATA, FUN=function(x) mean(range(x)))
+rownames(CENTROIDS) <- CENTROIDS$region
+CENTROIDS <- CENTROIDS[as.character(LANG.TO.STATE$region), ]
 
 page.name <- "Prague"
 x <- get.language.variations(page.name) %>% filter.and.add.states() %>% add.values() %>% add.coordinates()
+labels <- make.labels(x)
 
 
-ggplot(x, aes(long, lat, group=group, fill=value)) + 
-  geom_polygon(color="grey") + 
+ggplot(x, aes(long, lat)) + 
+  geom_polygon(aes(group=group, fill=value), color="grey") + 
+  coord_cartesian(xlim = c(-11,36), ylim = c(36, 70)) +
   theme.map() +
   scale_fill_viridis(option = "viridis", 
                      direction = -1, 
@@ -120,13 +133,14 @@ ggplot(x, aes(long, lat, group=group, fill=value)) +
                      name = NULL,
                      guide = guide_colorbar(barheight = unit(80, units = "mm"),
                                             barwidth = unit(2, units = "mm"),
-                                            title.position = 'left',
-                                            title.hjust = 0.5,
-                                            label.hjust = 0.5)) + 
+                                            title.position = 'top')) + 
   labs(x = NULL, 
        y = NULL, 
        title = page.name, 
-       subtitle = "Wikipedia page size in major language of the state") 
+       subtitle = "Wikipedia page size in major language of the state") +
+  
+  geom_label(data=labels, aes(long, lat, label = title), size=3)
+
 
 
 
