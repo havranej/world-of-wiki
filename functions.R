@@ -54,10 +54,19 @@ get.language.variations <- function(page.name){
   return(result)
 }
 
+# Old, slower function
 get.page.content <- function(lang.code, page.name){
   url <- sprintf("https://%s.wikipedia.org/w/api.php?action=parse&page=%s&prop=text&format=json&redirects=TRUE", lang.code, page.name)
   json.data <- fromJSON(file = url)
   result <- json.data$parse$text$`*`
+  return(result)
+}
+
+get.page.extract <- function(lang.code, page.name){
+  url <- sprintf("https://%s.wikipedia.org/w/api.php?action=query&titles=%s&prop=extracts&format=json&redirects&explaintext&exlimit=1",
+                 lang.code, page.name)
+  json.data <- fromJSON(file = url)
+  result <- json.data$query$pages[[1]]$extract
   return(result)
 }
 
@@ -66,8 +75,8 @@ remove.html <- function(text){
 }
 
 get.page.length <- function(lang.code, page.name){
-  raw.html <- get.page.content(lang.code, page.name)
-  len <- nchar(raw.html)
+  raw.text <- get.page.extract(lang.code, page.name)
+  len <- nchar(raw.text)
   return(len)
 }
 
