@@ -110,6 +110,11 @@ make.labels <- function(data){
   return(result)
 }
 
+set.russian.label.location <- function(centroids){
+  centroids["Russia",c("long", "lat")] <- c(33,58)
+  return(centroids)
+}
+
 MAP.DATA <- map_data("world")
 
 LANG.TO.STATE <- read.delim("languages-to-states.txt", header = FALSE, sep = ":", col.names = c("lang.code", "region"))
@@ -117,6 +122,7 @@ LANG.TO.STATE <- read.delim("languages-to-states.txt", header = FALSE, sep = ":"
 CENTROIDS <- aggregate(cbind(long, lat) ~ region, data=MAP.DATA, FUN=function(x) mean(range(x)))
 rownames(CENTROIDS) <- CENTROIDS$region
 CENTROIDS <- CENTROIDS[as.character(LANG.TO.STATE$region), ]
+CENTROIDS <- set.russian.label.location(CENTROIDS)
 
 page.name <- "Prague"
 x <- get.language.variations(page.name) %>% filter.and.add.states() %>% add.values() %>% add.coordinates()

@@ -6,6 +6,7 @@ da:Denmark
 de:Austria
 de:Germany
 de:Switzerland
+el:Greece
 en:UK
 es:Spain
 et:Estonia
@@ -17,6 +18,7 @@ hu:Hungary
 it:Italy
 lt:Lithuania
 lv:Latvia
+mk:Macedonia
 nl:Belgium
 nl:Netherlands
 no:Norway
@@ -24,8 +26,13 @@ pl:Poland
 pt:Portugal
 ro:Moldova
 ro:Romania
+ru:Russia
+sh:Montenegro
 sk:Slovakia
 sl:Slovenia
+sq:Albania
+sq:Kosovo
 sr:Serbia
 sv:Sweden
+tr:Turkey
 uk:Ukraine
