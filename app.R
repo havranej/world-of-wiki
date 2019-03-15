@@ -36,11 +36,13 @@ server <- function(input, output) {
     
     x <- get.language.variations(x)
     x <- filter.and.add.states(x)
-    x <- add.values(x) 
+    
+    withProgress(message = 'Making the map...', value = 0, {
+      x <- add.values(x, with.progress = TRUE) 
+    } )    
     
     x.coordinates <- add.coordinates(x)
-    labels <- make.labels(x)
-    
+    labels <- make.labels(x)     
     
     plot <- ggplot(x.coordinates, aes(long, lat)) + 
             theme_bw() +
@@ -55,7 +57,8 @@ server <- function(input, output) {
                                                       title.position = 'top')) + 
             labs(x = NULL,
                  y = NULL,
-                 title = page.name) +
+                 title = page.name, 
+                 subtitle = "Wikipedia page size in major language of the state") +
             
             geom_label(data=labels, aes(long, lat, label = title), size=3)
     

@@ -65,6 +65,13 @@ get.checked.page.length <- function(row){
   return(get.page.length(row["lang.code"], row["title"]))
 }
 
+get.checked.page.length.with.progress <- function(row){
+  incProgress(1/nrow(x), detail = paste("Getting page length in", row["language"]))
+  
+  if(is.na(row["title"])) return(NA)
+  return(get.page.length(row["lang.code"], row["title"]))
+}
+
 filter.and.add.states <- function(df){
   selection <- as.character(LANG.TO.STATE$lang.code)
   df <- df[rownames(df) %in% selection,] # Lengthy selection used in order to avoid partial matching
@@ -72,8 +79,12 @@ filter.and.add.states <- function(df){
   return(df)
 }
 
-add.values <- function(df){
-  values <- apply(df, 1, get.checked.page.length)
+add.values <- function(df, with.progress = FALSE){
+  if(with.progress){
+    values <- apply(df, 1, get.checked.page.length.with.progress) 
+  } else {
+    values <- apply(df, 1, get.checked.page.length)
+  }
   result <- cbind(df, value = values)
   return(result)
 }
