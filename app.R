@@ -11,10 +11,14 @@ source("constants.R")
 
 
 ui <- fluidPage(
+  
+  tags$head(includeScript("enterKeyDetection.js")),
+  
   titlePanel("World of Wiki"),
   sidebarLayout(
     sidebarPanel(width = 3,
       textInput("pagename", label = "Page name", value = "Prague"),
+      checkboxInput("showlabels", label = "Show labels", value = TRUE),
       actionButton("recalculate", label = "Show!")
       ),
     mainPanel(
@@ -24,9 +28,9 @@ ui <- fluidPage(
   )
 )
 
+
 server <- function(input, output) {
-  output$langmap <- renderPlot({
-    
+  getWikiPageData <- reactive({
     input$recalculate
     
     isolate(page.name <- input$pagename)
@@ -41,8 +45,18 @@ server <- function(input, output) {
       x <- add.values(x, with.progress = TRUE) 
     } )    
     
+    return(x)
+  })
+  
+  
+  output$langmap <- renderPlot({
+    
+    isolate(page.name <- input$pagename)
+    show.labels <- input$showlabels
+    
+    x <- getWikiPageData()
     x.coordinates <- add.coordinates(x)
-    labels <- make.labels(x)     
+    labels <- make.labels(x)   
     
     plot <- ggplot(x.coordinates, aes(long, lat)) + 
             theme_bw() +
@@ -57,10 +71,12 @@ server <- function(input, output) {
                                                       title.position = 'top')) + 
             labs(x = NULL,
                  y = NULL,
-                 title = page.name, 
-                 subtitle = "Wikipedia page size in major language of the state") +
-            
-            geom_label(data=labels, aes(long, lat, label = title), size=3)
+                 title = get.english.name(x), 
+                 subtitle = "Wikipedia page size in major language of the state")
+    
+    if(show.labels){
+      plot <- plot + geom_label(data=labels, aes(long, lat, label = title), size=3) 
+    }
     
     plot
   })

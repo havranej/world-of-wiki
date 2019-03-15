@@ -27,7 +27,7 @@ theme.map <- function(...) {
 }
 
 page.name <- "Prague"
-x <- get.base.page.json(page.name) %>% get.language.variations() %>% filter.and.add.states() %>% add.values() 
+x <- get.base.page.json(page.name) %>% get.language.variations() %>% filter.and.add.states() %>% add.values()
 x.coordinates <- x %>% add.coordinates()
 labels <- make.labels(x)
 

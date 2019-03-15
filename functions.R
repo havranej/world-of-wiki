@@ -66,7 +66,7 @@ get.checked.page.length <- function(row){
 }
 
 get.checked.page.length.with.progress <- function(row){
-  incProgress(1/nrow(x), detail = paste("Getting page length in", row["language"]))
+  incProgress(1/nrow(LANG.TO.STATE), detail = paste("Getting page size in", row["language"]))
   
   if(is.na(row["title"])) return(NA)
   return(get.page.length(row["lang.code"], row["title"]))
@@ -104,4 +104,8 @@ make.labels <- function(data){
 set.russian.label.location <- function(centroids){
   centroids["Russia",c("long", "lat")] <- c(33,58)
   return(centroids)
+}
+
+get.english.name <- function(df){
+  return(as.character(df[df$lang.code == "en", "title"]))
 }
