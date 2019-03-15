@@ -1,28 +1,4 @@
 
-library("rjson")
-library("ggplot2")
-library("dplyr")
-library("viridis")
-
-theme.map <- function(...) {
-  theme_minimal() +
-    theme(
-      axis.line = element_blank(),
-      axis.text.x = element_blank(),
-      axis.text.y = element_blank(),
-      axis.ticks = element_blank(),
-      axis.title.x = element_blank(),
-      axis.title.y = element_blank(),
-      panel.grid.major = element_line(color = "#ebebe5", size = 0.2),
-      panel.grid.minor = element_blank(),
-      plot.background = element_rect(fill = "#FFF8E7", color = NA), 
-      panel.background = element_rect(fill = "#FFF8E7", color = NA), 
-      legend.background = element_rect(fill = "#FFF8E7", color = NA),
-      panel.border = element_rect(fill = NA, color = "gray80", size = 0.5),
-      ...
-    )
-}
-
 get.links.here.number <- function(page.name){
   # For normal users limited to 500 :(
   url <- sprintf("https://en.wikipedia.org/w/api.php?action=query&titles=%s&prop=linkshere&format=json&redirects=TRUE&lhlimit=max", page.name)
@@ -40,9 +16,13 @@ add.native.language <- function(table, json.data){
   return(result)
 }
 
-get.language.variations <- function(page.name){
+get.base.page.json <- function(page.name){
   url <- sprintf("https://en.wikipedia.org/w/api.php?action=parse&page=%s&prop=langlinks&format=json&redirects=TRUE", page.name)
   json.data <- fromJSON(file = url)
+  return(json.data)
+}
+
+get.language.variations <- function(json.data){
   
   titles <- sapply(json.data$parse$langlinks, function(x)x$`*`)
   lang.codes <- sapply(json.data$parse$langlinks, function(x)x$lang)
@@ -114,40 +94,3 @@ set.russian.label.location <- function(centroids){
   centroids["Russia",c("long", "lat")] <- c(33,58)
   return(centroids)
 }
-
-MAP.DATA <- map_data("world")
-
-LANG.TO.STATE <- read.delim("languages-to-states.txt", header = FALSE, sep = ":", col.names = c("lang.code", "region"))
-
-CENTROIDS <- aggregate(cbind(long, lat) ~ region, data=MAP.DATA, FUN=function(x) mean(range(x)))
-rownames(CENTROIDS) <- CENTROIDS$region
-CENTROIDS <- CENTROIDS[as.character(LANG.TO.STATE$region), ]
-CENTROIDS <- set.russian.label.location(CENTROIDS)
-
-page.name <- "Prague"
-x <- get.language.variations(page.name) %>% filter.and.add.states() %>% add.values() %>% add.coordinates()
-labels <- make.labels(x)
-
-
-ggplot(x, aes(long, lat)) + 
-  geom_polygon(aes(group=group, fill=value), color="grey") + 
-  coord_cartesian(xlim = c(-11,36), ylim = c(36, 70)) +
-  theme.map() +
-  scale_fill_viridis(option = "viridis", 
-                     direction = -1, 
-                     na.value = "grey50",
-                     name = NULL,
-                     guide = guide_colorbar(barheight = unit(80, units = "mm"),
-                                            barwidth = unit(2, units = "mm"),
-                                            title.position = 'top')) + 
-  labs(x = NULL, 
-       y = NULL, 
-       title = page.name, 
-       subtitle = "Wikipedia page size in major language of the state") +
-  
-  geom_label(data=labels, aes(long, lat, label = title), size=3)
-
-
-
-
-
