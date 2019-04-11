@@ -7,6 +7,11 @@ get.links.here.number <- function(page.name){
   return(links.number)
 }
 
+replace.spaces.in.url <- function(url){
+  return(gsub(" ", "%20", url))
+}
+
+
 add.native.language <- function(table, json.data){
   name <- json.data$parse$title
   url <- sprintf("https://en.wikipedia.org/wiki/%s", name)
@@ -18,6 +23,8 @@ add.native.language <- function(table, json.data){
 
 get.base.page.json <- function(page.name){
   url <- sprintf("https://en.wikipedia.org/w/api.php?action=parse&page=%s&prop=langlinks&format=json&redirects=TRUE", page.name)
+  url <- replace.spaces.in.url(url)
+  
   json.data <- fromJSON(file = url)
   return(json.data)
 }
@@ -45,6 +52,8 @@ get.page.content <- function(lang.code, page.name){
 get.page.extract <- function(lang.code, page.name){
   url <- sprintf("https://%s.wikipedia.org/w/api.php?action=query&titles=%s&prop=extracts&format=json&redirects&explaintext&exlimit=1",
                  lang.code, page.name)
+  url <- replace.spaces.in.url(url)
+  
   json.data <- fromJSON(file = url)
   result <- json.data$query$pages[[1]]$extract
   return(result)
